@@ -1,0 +1,25 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### IntelliJ / NetBeans ###
+.idea/
+*.iml
+*.iws
+*.ipr
+nbproject/private/
+nbbuild/
+nbdist/
+nb-configuration.xml
+
+### VS Code ###
+.vscode/
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Maven ###
+log/
+*.log
