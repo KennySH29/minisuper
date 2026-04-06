@@ -1,6 +1,4 @@
-//Es el "puente" entre el navegador del usuario y la lógica del sistema. Recibe las peticiones HTTP y decide qué hacer:
 package com.minisuper.controller;
-
 
 import com.minisuper.service.ClienteService;
 import org.springframework.stereotype.Controller;
@@ -19,21 +17,23 @@ public class ConsultaController {
     public ConsultaController(ClienteService clienteService) {
         this.clienteService = clienteService;
     }
-    
+
     @GetMapping("/listado")
     public String listado(Model model) {
         var clientes = clienteService.getClientes();
         model.addAttribute("clientes", clientes);
+        model.addAttribute("totalClientes", clientes.size());
+        model.addAttribute("cliente", null);
         return "cliente/listado";
     }
-    
+
     @PostMapping("/consultaDerivada")
-    public String buscarPorNombre(
-            @RequestParam() String nombre,
-            Model model) {
+    public String buscarPorNombre(@RequestParam String nombre, Model model) {
         var clientes = clienteService.buscarPorNombre(nombre);
-        model.addAttribute("clientes", clientes);  
-        return "/consultas/listado";
+        model.addAttribute("clientes", clientes);
+        model.addAttribute("totalClientes", clientes.size());
+        model.addAttribute("nombreBuscado", nombre);
+        model.addAttribute("cliente", null);
+        return "cliente/listado";
     }
-    
 }

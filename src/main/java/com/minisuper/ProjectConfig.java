@@ -1,6 +1,3 @@
-
-//ESTE ES UN ARCHIVO DE CONFIGURACION. TODOS LOS METODOS SE EJECUTAN ANTES DE QUE EL SITIO WEB ESTE DISPONIBLE
-//ESTE ARCHIVO SR PUEDE REUTILIAR PARA LAS DIFERENTES ACTIVIDADES DEL CURSO
 package com.minisuper;
 
 import java.util.Locale;
@@ -23,42 +20,37 @@ public class ProjectConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("index");
-        registry.addViewController("/acceso_denegado").setViewName("acceso_denegado");
-        registry.addViewController("/login").setViewName("login");
-        registry.addViewController("/registro/nuevo").setViewName("/registro/nuevo");
     }
 
     @Bean
     public SpringResourceTemplateResolver templateResolver_0() {
         SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
-        resolver.setPrefix("classpath:/templates");
+        resolver.setPrefix("classpath:/templates/");
         resolver.setSuffix(".html");
         resolver.setTemplateMode(TemplateMode.HTML);
+        resolver.setCharacterEncoding("UTF-8");
+        resolver.setCacheable(false);
         resolver.setOrder(0);
         resolver.setCheckExistence(true);
         return resolver;
     }
 
-    
-    //IDENTIFICA EL IDIOMA DEL SERVIDOR DONDE ESTA EL SITIO WEB PARA UTILIZARLO
-    //SE FIJA EN LA UBICACION Y LA ZONA HORARIA DEL SEVIDOR
     @Bean
     public LocaleResolver localeResolver() {
-        var slr = new SessionLocaleResolver();
+        SessionLocaleResolver slr = new SessionLocaleResolver();
         slr.setDefaultLocale(Locale.getDefault());
         slr.setLocaleAttributeName("session.current.locale");
         slr.setTimeZoneAttributeName("session.current.timezone");
         return slr;
     }
-    
-    //INTERCEPTOR DE CAMBIO DE UBICACION
+
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
-        var lci = new LocaleChangeInterceptor();
-        lci.setParamName("lang"); //Variable que controla la ubicacion
+        LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
+        lci.setParamName("lang");
         return lci;
     }
-    
+
     @Override
     public void addInterceptors(InterceptorRegistry registro) {
         registro.addInterceptor(localeChangeInterceptor());
@@ -69,6 +61,7 @@ public class ProjectConfig implements WebMvcConfigurer {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasename("messages");
         messageSource.setDefaultEncoding("UTF-8");
+        messageSource.setUseCodeAsDefaultMessage(true);
         return messageSource;
     }
 }

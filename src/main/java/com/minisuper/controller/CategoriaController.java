@@ -1,4 +1,3 @@
-//Es el "puente" entre el navegador del usuario y la lógica del sistema. Recibe las peticiones HTTP y decide qué hacer:
 package com.minisuper.controller;
 
 import com.minisuper.domain.Categoria;
@@ -28,21 +27,28 @@ public class CategoriaController {
         this.messageSource = messageSource;
     }
 
-
     @GetMapping("/listado")
     public String listado(Model model) {
         var categorias = categoriaService.getCategorias();
         model.addAttribute("categorias", categorias);
         model.addAttribute("totalCategorias", categorias.size());
-        return "/categoria/listado";
-    } 
+        model.addAttribute("categoria", new Categoria());
+        return "categoria/listado";
+    }
 
     @PostMapping("/guardar")
-    public String guardar(@Valid Categoria categoria,RedirectAttributes redirectAttributes) {
-
-        categoriaService.save(categoria);
-        redirectAttributes.addFlashAttribute("todoOk", messageSource.getMessage("mensaje.actualizado", null, Locale.getDefault()));
-
+    public String guardar(@Valid Categoria categoria, RedirectAttributes redirectAttributes) {
+        try {
+            categoriaService.save(categoria);
+            redirectAttributes.addFlashAttribute(
+                    "todoOk",
+                    messageSource.getMessage("mensaje.actualizado", null, Locale.getDefault())
+            );
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al guardar la categoría.");
+        }
         return "redirect:/categoria/listado";
     }
 
@@ -50,30 +56,43 @@ public class CategoriaController {
     public String eliminar(@RequestParam Integer idCategoria, RedirectAttributes redirectAttributes) {
         String titulo = "todoOk";
         String detalle = "mensaje.eliminado";
+
         try {
             categoriaService.delete(idCategoria);
         } catch (IllegalArgumentException e) {
-            titulo = "error"; // Captura la excepción de argumento inválido para el mensaje de "no existe"
+            titulo = "error";
             detalle = "categoria.error01";
         } catch (IllegalStateException e) {
-            titulo = "error"; // Captura la excepción de estado ilegal para el mensaje de "datos asociados"
+            titulo = "error";
             detalle = "categoria.error02";
         } catch (Exception e) {
-            titulo = "error";  // Captura cualquier otra excepción inesperada
+            titulo = "error";
             detalle = "categoria.error03";
         }
-        redirectAttributes.addFlashAttribute(titulo, messageSource.getMessage(detalle, null, Locale.getDefault()));
+
+        redirectAttributes.addFlashAttribute(
+                titulo,
+                messageSource.getMessage(detalle, null, Locale.getDefault())
+        );
         return "redirect:/categoria/listado";
     }
 
     @GetMapping("/modificar/{idCategoria}")
-    public String modificar(@PathVariable("idCategoria") Integer idCategoria, Model model, RedirectAttributes redirectAttributes) {
+    public String modificar(@PathVariable("idCategoria") Integer idCategoria,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+
         Optional<Categoria> categoriaOpt = categoriaService.getCategoria(idCategoria);
+
         if (categoriaOpt.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", messageSource.getMessage("categoria.error01", null, Locale.getDefault()));
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    messageSource.getMessage("categoria.error01", null, Locale.getDefault())
+            );
             return "redirect:/categoria/listado";
         }
+
         model.addAttribute("categoria", categoriaOpt.get());
-        return "/categoria/modifica";
+        return "categoria/modifica";
     }
 }

@@ -32,14 +32,23 @@ public class ClienteController {
         var clientes = clienteService.getClientes();
         model.addAttribute("clientes", clientes);
         model.addAttribute("totalClientes", clientes.size());
+        model.addAttribute("cliente", new Cliente());
         return "cliente/listado";
     }
 
     @PostMapping("/guardar")
     public String guardar(@Valid Cliente cliente, RedirectAttributes redirectAttributes) {
-        clienteService.save(cliente);
-        redirectAttributes.addFlashAttribute("todoOk",
-            messageSource.getMessage("mensaje.actualizado", null, Locale.getDefault()));
+        try {
+            clienteService.save(cliente);
+            redirectAttributes.addFlashAttribute(
+                    "todoOk",
+                    messageSource.getMessage("mensaje.actualizado", null, Locale.getDefault())
+            );
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al guardar el cliente.");
+        }
         return "redirect:/cliente/listado";
     }
 
@@ -47,6 +56,7 @@ public class ClienteController {
     public String eliminar(@RequestParam Integer idCliente, RedirectAttributes redirectAttributes) {
         String titulo = "todoOk";
         String detalle = "mensaje.eliminado";
+
         try {
             clienteService.delete(idCliente);
         } catch (IllegalArgumentException e) {
@@ -59,19 +69,29 @@ public class ClienteController {
             titulo = "error";
             detalle = "cliente.error03";
         }
-        redirectAttributes.addFlashAttribute(titulo,
-            messageSource.getMessage(detalle, null, Locale.getDefault()));
+
+        redirectAttributes.addFlashAttribute(
+                titulo,
+                messageSource.getMessage(detalle, null, Locale.getDefault())
+        );
         return "redirect:/cliente/listado";
     }
 
     @GetMapping("/modificar/{idCliente}")
-    public String modificar(@PathVariable("idCliente") Integer idCliente, Model model, RedirectAttributes redirectAttributes) {
+    public String modificar(@PathVariable("idCliente") Integer idCliente,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+
         Optional<Cliente> clienteOpt = clienteService.getCliente(idCliente);
+
         if (clienteOpt.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error",
-                messageSource.getMessage("cliente.error01", null, Locale.getDefault()));
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    messageSource.getMessage("cliente.error01", null, Locale.getDefault())
+            );
             return "redirect:/cliente/listado";
         }
+
         model.addAttribute("cliente", clienteOpt.get());
         return "cliente/modifica";
     }

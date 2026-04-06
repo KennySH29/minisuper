@@ -29,6 +29,36 @@ public class ClienteService {
 
     @Transactional
     public void save(Cliente cliente) {
+        String cedula = cliente.getCedula() != null ? cliente.getCedula().trim() : null;
+        String correo = cliente.getCorreo() != null ? cliente.getCorreo().trim() : null;
+
+        if (cedula == null || cedula.isBlank()) {
+            throw new IllegalArgumentException("La cédula es obligatoria.");
+        }
+
+        cliente.setCedula(cedula);
+
+        if (correo != null && correo.isBlank()) {
+            correo = null;
+        }
+        cliente.setCorreo(correo);
+
+        if (cliente.getIdCliente() == null) {
+            if (clienteRepository.existsByCedula(cedula)) {
+                throw new IllegalArgumentException("Ya existe un cliente con esa cédula.");
+            }
+            if (correo != null && clienteRepository.existsByCorreo(correo)) {
+                throw new IllegalArgumentException("Ya existe un cliente con ese correo.");
+            }
+        } else {
+            if (clienteRepository.existsByCedulaAndIdClienteNot(cedula, cliente.getIdCliente())) {
+                throw new IllegalArgumentException("Ya existe otro cliente con esa cédula.");
+            }
+            if (correo != null && clienteRepository.existsByCorreoAndIdClienteNot(correo, cliente.getIdCliente())) {
+                throw new IllegalArgumentException("Ya existe otro cliente con ese correo.");
+            }
+        }
+
         clienteRepository.save(cliente);
     }
 
@@ -37,15 +67,16 @@ public class ClienteService {
         if (!clienteRepository.existsById(idCliente)) {
             throw new IllegalArgumentException("El cliente con ID " + idCliente + " no existe.");
         }
+
         try {
             clienteRepository.deleteById(idCliente);
         } catch (DataIntegrityViolationException e) {
             throw new IllegalStateException("No se puede eliminar el cliente. Tiene datos asociados.", e);
         }
     }
-    
+
     @Transactional(readOnly = true)
-    public List<Cliente> buscarPorNombre(String nombre){
-        return clienteRepository.findByNombre(nombre);
+    public List<Cliente> buscarPorNombre(String nombre) {
+        return clienteRepository.findByNombreContainingIgnoreCase(nombre);
     }
 }

@@ -7,6 +7,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
-    
-    public List<Cliente> findByNombre(String nombre);   
+
+    List<Cliente> findByNombreContainingIgnoreCase(String nombre);
+
+    boolean existsByCedula(String cedula);
+
+    boolean existsByCedulaAndIdClienteNot(String cedula, Integer idCliente);
+
+    boolean existsByCorreo(String correo);
+
+    boolean existsByCorreoAndIdClienteNot(String correo, Integer idCliente);
 }

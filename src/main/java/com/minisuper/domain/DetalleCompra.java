@@ -1,20 +1,30 @@
 package com.minisuper.domain;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "detalle_compra")
+@ToString(exclude = {"compra", "producto"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class DetalleCompra implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_detalle_compra")
+    @EqualsAndHashCode.Include
     private Integer idDetalleCompra;
 
     @ManyToOne
@@ -25,16 +35,18 @@ public class DetalleCompra implements Serializable {
     @JoinColumn(name = "id_producto", nullable = false)
     private Producto producto;
 
+    @NotNull(message = "La cantidad no puede ser nula")
+    @Min(value = 1, message = "La cantidad debe ser mayor a cero")
     @Column(nullable = false)
     private Integer cantidad;
 
-    @Column(precision=12, scale=2) 
-    @NotNull(message="El precio no puede ser nulo") //Se importa de jakarta
-    @DecimalMin(value="0.01", inclusive=true, message="El precio debe ser mayor o igual a cero")
+    @NotNull(message = "El precio unitario no puede ser nulo")
+    @DecimalMin(value = "0.01", inclusive = true, message = "El precio unitario debe ser mayor a cero")
+    @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal precioUnitario;
 
-    @Column(precision=12, scale=2) 
-    @NotNull(message="El precio no puede ser nulo") //Se importa de jakarta
-    @DecimalMin(value="0.01", inclusive=true, message="El precio debe ser mayor o igual a cero")
+    @NotNull(message = "El subtotal no puede ser nulo")
+    @DecimalMin(value = "0.01", inclusive = true, message = "El subtotal debe ser mayor a cero")
+    @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal subtotal;
 }

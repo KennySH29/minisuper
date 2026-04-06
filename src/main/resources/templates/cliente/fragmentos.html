@@ -7,49 +7,71 @@
 
         <!-- Fragmento 1: Botón agregar + Modal -->
         <section th:fragment="agregar">
-            <div class="row py-4 mb-2 bg-light">
-                <div class="col-md-1"></div>
-                <div class="col-md-3">
-                    <button type="button" class="btn btn-success"
-                            data-bs-toggle="modal" data-bs-target="#agregarClienteModal">
-                        <i class="fa-solid fa-plus"></i> [[#{accion.agregar}]]
-                    </button>
+            <div class="container py-4">
+                <div class="row align-items-center g-3">
+                    <div class="col-md-6">
+                        <h2 class="mb-1 text-primary">
+                            <i class="fa-solid fa-users"></i> [[#{cliente.listado}]]
+                        </h2>
+                        <p class="text-muted mb-0">Administra los clientes registrados en el minisúper.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <button type="button" class="btn btn-primary shadow-sm"
+                                data-bs-toggle="modal" data-bs-target="#agregarClienteModal">
+                            <i class="fa-solid fa-plus"></i> [[#{accion.agregar}]]
+                        </button>
+                    </div>
                 </div>
             </div>
 
             <div class="modal fade" id="agregarClienteModal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <form th:action="@{/cliente/guardar}" method="post" class="was-validated">
-                            <div class="modal-header bg-success text-white">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content shadow">
+                        <form th:action="@{/cliente/guardar}" method="post" class="needs-validation" novalidate>
+                            <div class="modal-header bg-primary text-white">
                                 <h5 class="modal-title">
-                                    <i class="fa-solid fa-users"></i> [[#{accion.agregar}]] [[#{plantilla.clientes}]]
+                                    <i class="fa-solid fa-user-plus"></i> [[#{accion.agregar}]] [[#{plantilla.clientes}]]
                                 </h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                             </div>
+
                             <div class="modal-body">
                                 <div class="mb-3">
-                                    <label class="form-label">[[#{cliente.nombre}]]</label>
-                                    <input type="text" name="nombre" class="form-control" required="true"/>
+                                    <label class="form-label fw-bold">[[#{cliente.nombre}]]</label>
+                                    <input type="text" name="nombre" class="form-control" required="true"
+                                           placeholder="Digite el nombre del cliente"/>
+                                    <div class="invalid-feedback">
+                                        Debe ingresar el nombre del cliente.
+                                    </div>
                                 </div>
+
                                 <div class="mb-3">
-                                    <label class="form-label">[[#{cliente.cedula}]]</label>
-                                    <input type="text" name="cedula" class="form-control" required="true"/>
+                                    <label class="form-label fw-bold">[[#{cliente.cedula}]]</label>
+                                    <input type="text" name="cedula" class="form-control" required="true"
+                                           placeholder="Digite la cédula"/>
+                                    <div class="invalid-feedback">
+                                        Debe ingresar la cédula.
+                                    </div>
                                 </div>
+
                                 <div class="mb-3">
-                                    <label class="form-label">[[#{cliente.telefono}]]</label>
-                                    <input type="text" name="telefono" class="form-control"/>
+                                    <label class="form-label fw-bold">[[#{cliente.telefono}]]</label>
+                                    <input type="text" name="telefono" class="form-control"
+                                           placeholder="Digite el teléfono"/>
                                 </div>
+
                                 <div class="mb-3">
-                                    <label class="form-label">[[#{cliente.correo}]]</label>
-                                    <input type="email" name="correo" class="form-control"/>
+                                    <label class="form-label fw-bold">[[#{cliente.correo}]]</label>
+                                    <input type="email" name="correo" class="form-control"
+                                           placeholder="Digite el correo electrónico"/>
                                 </div>
                             </div>
+
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                     <i class="fa-solid fa-xmark"></i> [[#{accion.cerrar}]]
                                 </button>
-                                <button type="submit" class="btn btn-success">
+                                <button type="submit" class="btn btn-primary">
                                     <i class="fa-solid fa-floppy-disk"></i> [[#{accion.guardar}]]
                                 </button>
                             </div>
@@ -60,59 +82,72 @@
         </section>
 
         <!-- Fragmento 2: Listado de clientes -->
-        <section th:fragment="listado" class="p-3">
-            <div class="row p-3">
-                <div class="col-md-9">
-                    <div class="card p-2">
-                        <div class="card-header"><h4>[[#{cliente.listado}]]</h4></div>
-                        <div class="card-body">
-                            <div th:if="${clientes != null and !clientes.empty}">
-                                <table class="table table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>[[#{cliente.nombre}]]</th>
-                                            <th>[[#{cliente.cedula}]]</th>
-                                            <th>[[#{cliente.telefono}]]</th>
-                                            <th>[[#{cliente.correo}]]</th>
-                                            <th class="text-center">[[#{accion.acciones}]]</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr th:each="c : ${clientes}">
-                                            <td>[[${c.idCliente}]]</td>
-                                            <td>[[${c.nombre}]]</td>
-                                            <td>[[${c.cedula}]]</td>
-                                            <td>[[${c.telefono}]]</td>
-                                            <td>[[${c.correo}]]</td>
-                                            <td class="text-center">
-                                                <a th:href="@{/cliente/modificar/{id}(id=${c.idCliente})}"
-                                                   class="btn btn-sm btn-warning">
-                                                    <i class="fas fa-pencil-alt"></i> [[#{accion.modificar}]]
-                                                </a>
-                                                <button type="button" class="btn btn-sm btn-danger"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#confirmModal"
-                                                        th:data-bs-id="${c.idCliente}"
-                                                        th:data-bs-descripcion="${c.nombre}">
-                                                    <i class="fa-solid fa-trash"></i> [[#{accion.eliminar}]]
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+        <section th:fragment="listado" class="pb-4">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-lg-9">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-dark text-white">
+                                <h4 class="mb-0">
+                                    <i class="fa-solid fa-list"></i> [[#{cliente.listado}]]
+                                </h4>
                             </div>
-                            <div class="text-center p-2" th:if="${clientes == null or clientes.empty}">
-                                <span>[[#{cliente.sinRegistros}]]</span>
+
+                            <div class="card-body">
+                                <div th:if="${clientes != null and !clientes.empty}" class="table-responsive">
+                                    <table class="table table-striped table-hover align-middle">
+                                        <thead class="table-primary">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>[[#{cliente.nombre}]]</th>
+                                                <th>[[#{cliente.cedula}]]</th>
+                                                <th>[[#{cliente.telefono}]]</th>
+                                                <th>[[#{cliente.correo}]]</th>
+                                                <th class="text-center">[[#{accion.acciones}]]</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="c : ${clientes}">
+                                                <td>[[${c.idCliente}]]</td>
+                                                <td class="fw-semibold">[[${c.nombre}]]</td>
+                                                <td>[[${c.cedula}]]</td>
+                                                <td>[[${c.telefono}]]</td>
+                                                <td>[[${c.correo}]]</td>
+                                                <td class="text-center">
+                                                    <a th:href="@{/cliente/modificar/{id}(id=${c.idCliente})}"
+                                                       class="btn btn-sm btn-warning me-1">
+                                                        <i class="fas fa-pencil-alt"></i> [[#{accion.modificar}]]
+                                                    </a>
+
+                                                    <button type="button" class="btn btn-sm btn-danger"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#confirmModal"
+                                                            th:data-bs-id="${c.idCliente}"
+                                                            th:data-bs-descripcion="${c.nombre}">
+                                                        <i class="fa-solid fa-trash"></i> [[#{accion.eliminar}]]
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="text-center py-4" th:if="${clientes == null or clientes.empty}">
+                                    <i class="fa-solid fa-circle-info fa-2x text-secondary mb-2"></i>
+                                    <p class="mb-0 text-muted">[[#{cliente.sinRegistros}]]</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-center bg-success text-white mb-3">
-                        <div class="card-body">
-                            <h3>[[#{cliente.total}]]</h3>
-                            <h4 class="fs-2"><i class="fas fa-users"></i> [[${totalClientes}]]</h4>
+
+                    <div class="col-lg-3">
+                        <div class="card text-center bg-primary text-white border-0 shadow-sm">
+                            <div class="card-body py-4">
+                                <h4>[[#{cliente.total}]]</h4>
+                                <h2 class="display-6 fw-bold mb-0">
+                                    <i class="fas fa-users"></i> [[${totalClientes}]]
+                                </h2>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -121,58 +156,75 @@
 
         <!-- Fragmento 3: Formulario de edición -->
         <section th:fragment="editar">
-            <div class="row">
-                <div class="col-md-2"></div>
-                <div class="col-md-8">
-                    <form method="post" th:action="@{/cliente/guardar}"
-                          th:object="${cliente}" class="was-validated">
-                        <input type="hidden" th:field="*{idCliente}"/>
+            <div class="container py-4">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <form method="post"
+                              th:action="@{/cliente/guardar}"
+                              th:object="${cliente}"
+                              class="needs-validation"
+                              novalidate>
 
-                        <div class="row py-4 mb-4 bg-light">
-                            <div class="col-md-4 d-grid">
-                                <a th:href="@{/cliente/listado}" class="btn btn-primary">
-                                    <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
-                                </a>
-                            </div>
-                            <div class="col-md-4 d-grid">
-                                <button type="submit" class="btn btn-success">
-                                    <i class="fas fa-check"></i> [[#{accion.guardar}]]
-                                </button>
-                            </div>
-                        </div>
+                            <input type="hidden" th:field="*{idCliente}"/>
 
-                        <div class="row">
-                            <div class="col">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4><i class="fas fa-edit"></i> [[#{accion.modificar}]] [[#{plantilla.clientes}]]</h4>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6 d-grid">
+                                    <a th:href="@{/cliente/listado}" class="btn btn-primary">
+                                        <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                                    </a>
+                                </div>
+                                <div class="col-md-6 d-grid">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-check"></i> [[#{accion.guardar}]]
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-warning">
+                                    <h4 class="mb-0">
+                                        <i class="fas fa-edit"></i> [[#{accion.modificar}]] [[#{plantilla.clientes}]]
+                                    </h4>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">[[#{cliente.nombre}]]</label>
+                                        <input type="text" class="form-control"
+                                               th:field="*{nombre}" required="true"
+                                               placeholder="Digite el nombre del cliente"/>
+                                        <div class="invalid-feedback">
+                                            Debe ingresar el nombre del cliente.
+                                        </div>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="mb-3">
-                                            <label class="form-label">[[#{cliente.nombre}]]</label>
-                                            <input type="text" class="form-control"
-                                                   th:field="*{nombre}" required="true"/>
+
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">[[#{cliente.cedula}]]</label>
+                                        <input type="text" class="form-control"
+                                               th:field="*{cedula}" required="true"
+                                               placeholder="Digite la cédula"/>
+                                        <div class="invalid-feedback">
+                                            Debe ingresar la cédula.
                                         </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">[[#{cliente.cedula}]]</label>
-                                            <input type="text" class="form-control"
-                                                   th:field="*{cedula}" required="true"/>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">[[#{cliente.telefono}]]</label>
-                                            <input type="text" class="form-control"
-                                                   th:field="*{telefono}"/>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">[[#{cliente.correo}]]</label>
-                                            <input type="email" class="form-control"
-                                                   th:field="*{correo}"/>
-                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">[[#{cliente.telefono}]]</label>
+                                        <input type="text" class="form-control"
+                                               th:field="*{telefono}"
+                                               placeholder="Digite el teléfono"/>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">[[#{cliente.correo}]]</label>
+                                        <input type="email" class="form-control"
+                                               th:field="*{correo}"
+                                               placeholder="Digite el correo electrónico"/>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </section>
@@ -181,18 +233,24 @@
         <section th:fragment="confirmarEliminar">
             <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
+                    <div class="modal-content shadow">
                         <form th:action="@{/cliente/eliminar}" method="post">
                             <input type="hidden" name="idCliente" id="modalId"/>
-                            <div class="modal-header bg-warning text-white">
+
+                            <div class="modal-header bg-danger text-white">
                                 <h5 class="modal-title">
                                     <i class="fa-solid fa-circle-exclamation"></i> [[#{accion.confirmar}]]
                                 </h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                             </div>
+
                             <div class="modal-body">
-                                <p>[[#{cliente.confirmarEliminar}]] <strong id="modalDescripcion"></strong>?</p>
+                                <p class="mb-0">
+                                    [[#{cliente.confirmarEliminar}]]
+                                    <strong id="modalDescripcion"></strong>?
+                                </p>
                             </div>
+
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                     <i class="fa-solid fa-xmark"></i> [[#{accion.cerrar}]]
@@ -206,54 +264,6 @@
                 </div>
             </div>
         </section>
-        
-        
- <!--
-        <section th:fragment="consultas" class="row row-cols-4 p-2">
-
-            <div th:replace="~{consultas/fragmentos :: formConsulta('success','/consultas/consultaDerivada')}"/> 
-            </div>
-
-        </section>
-
-
-        
-
-        <div th:fragment="formConsulta(colorForm,textoForm,accionForm)">
-
-            <form method="post" 
-                  th:action="@{${accionForm}}" 
-                  class="was-validated">
-
-                <div class="card p-2">
-                    <div class="card-header text-center text-white "
-                         th:classappend="${'bg-'+colorForm}">
-                    </div>
-                    <div class="card-body">
-                        <div class='mb-3'>
-                            <label>[[#{consultas.nombre}]]</label>
-                            <input type='text' 
-                                   name='nombre'
-                                   placeholder="Buscar cliente"
-                                   th:value='${nombre}' 
-                                   class='form-control'
-                                   required/>
-                        </div>
-
-                    </div>
-                    <div class="card-footer text-center">
-                        <button type='submit' class='btn text-white'
-                                th:classappend="${'btn-'+colorForm}">
-                            <i class='fa-solid fa-magnifying-glass'> </i>                                 
-                        </button>
-                    </div>
-                </div>
-
-            </form>
-
-        </div>
-        
-        -->
 
     </body>
 </html>
