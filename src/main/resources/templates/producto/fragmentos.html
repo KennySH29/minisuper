@@ -25,7 +25,7 @@
             <div class="modal fade" id="agregarProductoModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content shadow">
-                        <form th:action="@{/producto/guardar}" method="post" class="needs-validation" novalidate>
+                        <form th:action="@{/producto/guardar}" th:object="${producto}" method="post">
                             <div class="modal-header bg-info text-white">
                                 <h5 class="modal-title">
                                     <i class="fa-solid fa-box-open"></i> Agregar producto
@@ -37,45 +37,18 @@
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Nombre</label>
-                                        <input type="text" name="nombre" class="form-control" required
-                                               placeholder="Digite el nombre del producto">
-                                        <div class="invalid-feedback">
-                                            Debe ingresar el nombre del producto.
-                                        </div>
+                                        <input type="text" th:field="*{nombre}" class="form-control" required placeholder="Digite el nombre del producto">
+                                            <div class="invalid-feedback">
+                                                Debe ingresar el nombre del producto.
+                                            </div>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label fw-bold">Código de barras</label>
-                                        <input type="text" name="codigoBarras" class="form-control"
-                                               placeholder="Digite el código de barras">
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">Precio de compra</label>
-                                        <input type="number" step="0.01" min="0.01" name="precioCompra"
-                                               class="form-control" required
-                                               placeholder="Digite el precio de compra">
-                                        <div class="invalid-feedback">
-                                            Debe ingresar el precio de compra.
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">Precio de venta</label>
-                                        <input type="number" step="0.01" min="0.01" name="precioVenta"
-                                               class="form-control" required
-                                               placeholder="Digite el precio de venta">
-                                        <div class="invalid-feedback">
-                                            Debe ingresar el precio de venta.
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">Estado</label>
-                                        <select name="estado" class="form-select">
-                                            <option value="true">Activo</option>
-                                            <option value="false">Inactivo</option>
-                                        </select>
+                                        <label class="form-label fw-bold">Precio</label>
+                                        <input type="number" step="0.01" min="0.01" th:field="*{precio}" class="form-control" required  placeholder="Digite el precio">
+                                            <div class="invalid-feedback">
+                                                Debe ingresar el precio del producto.
+                                            </div>
                                     </div>
 
                                     <div class="col-md-6">
@@ -96,6 +69,20 @@
                                         <label class="form-label fw-bold">Descripción</label>
                                         <textarea name="descripcion" class="form-control" rows="3"
                                                   placeholder="Digite la descripción del producto"></textarea>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Proveedor</label>
+                                        <select name="proveedor.idProveedor" class="form-select" required>
+                                            <option value="">Seleccione un proveedor</option>
+                                            <option th:each="prov : ${proveedores}"
+                                                    th:value="${prov.idProveedor}"
+                                                    th:text="${prov.nombre}">
+                                            </option>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            Debe seleccionar un proveedor.
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -131,13 +118,10 @@
                                         <thead class="table-info">
                                             <tr>
                                                 <th>#</th>
-                                                <th>Nombre</th>
-                                                <th>Código</th>
-                                                <th>Descripción</th>
-                                                <th>Compra</th>
-                                                <th>Venta</th>
-                                                <th>Estado</th>
-                                                <th>Categoría</th>
+                                                <th>[[#{producto.nombre}]]</th>
+                                                <th>[[#{producto.descripcion}]]</th>
+                                                <th>[[#{producto.precio}]]</th>
+                                                <th>[[#{producto.categoria}]]</th>
                                                 <th class="text-center">Acciones</th>
                                             </tr>
                                         </thead>
@@ -145,14 +129,8 @@
                                             <tr th:each="p : ${productos}">
                                                 <td th:text="${p.idProducto}"></td>
                                                 <td class="fw-semibold" th:text="${p.nombre}"></td>
-                                                <td th:text="${p.codigoBarras}"></td>
                                                 <td th:text="${p.descripcion}"></td>
-                                                <td th:text="'₡' + ${p.precioCompra}"></td>
-                                                <td th:text="'₡' + ${p.precioVenta}"></td>
-                                                <td>
-                                                    <span th:if="${p.estado}" class="badge bg-success">Activo</span>
-                                                    <span th:unless="${p.estado}" class="badge bg-danger">Inactivo</span>
-                                                </td>
+                                                <td th:text="'₡' + ${p.precio}"></td>
                                                 <td th:text="${p.categoria != null ? p.categoria.nombre : ''}"></td>
                                                 <td class="text-center">
                                                     <a th:href="@{/producto/modificar/{idProducto}(idProducto=${p.idProducto})}"
@@ -236,36 +214,15 @@
                                                    placeholder="Digite el nombre del producto">
                                         </div>
 
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-bold">Código de barras</label>
-                                            <input type="text" class="form-control"
-                                                   th:field="*{codigoBarras}"
-                                                   placeholder="Digite el código de barras">
-                                        </div>
 
                                         <div class="col-md-6">
-                                            <label class="form-label fw-bold">Precio de compra</label>
+                                            <label class="form-label fw-bold">Precio</label>
                                             <input type="number" step="0.01" min="0.01"
                                                    class="form-control"
-                                                   th:field="*{precioCompra}" required
-                                                   placeholder="Digite el precio de compra">
+                                                   th:field="*{precio}" required
+                                                   placeholder="Digite el precio del producto">
                                         </div>
 
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-bold">Precio de venta</label>
-                                            <input type="number" step="0.01" min="0.01"
-                                                   class="form-control"
-                                                   th:field="*{precioVenta}" required
-                                                   placeholder="Digite el precio de venta">
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-bold">Estado</label>
-                                            <select class="form-select" th:field="*{estado}">
-                                                <option th:value="true">Activo</option>
-                                                <option th:value="false">Inactivo</option>
-                                            </select>
-                                        </div>
 
                                         <div class="col-md-6">
                                             <label class="form-label fw-bold">Categoría</label>

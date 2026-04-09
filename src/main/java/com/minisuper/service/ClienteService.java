@@ -29,9 +29,9 @@ public class ClienteService {
 
     @Transactional
     public void save(Cliente cliente) {
-        String cedula = cliente.getCedula() != null ? cliente.getCedula().trim() : null;
         String correo = cliente.getCorreo() != null ? cliente.getCorreo().trim() : null;
-
+        String cedula = cliente.getCedula() != null ? cliente.getCedula().trim() : null;
+        
         if (cedula == null || cedula.isBlank()) {
             throw new IllegalArgumentException("La cédula es obligatoria.");
         }
@@ -41,15 +41,19 @@ public class ClienteService {
         if (correo != null && correo.isBlank()) {
             correo = null;
         }
+       
         cliente.setCorreo(correo);
 
+        
         if (cliente.getIdCliente() == null) {
             if (clienteRepository.existsByCedula(cedula)) {
                 throw new IllegalArgumentException("Ya existe un cliente con esa cédula.");
             }
+        
             if (correo != null && clienteRepository.existsByCorreo(correo)) {
                 throw new IllegalArgumentException("Ya existe un cliente con ese correo.");
             }
+            
         } else {
             if (clienteRepository.existsByCedulaAndIdClienteNot(cedula, cliente.getIdCliente())) {
                 throw new IllegalArgumentException("Ya existe otro cliente con esa cédula.");

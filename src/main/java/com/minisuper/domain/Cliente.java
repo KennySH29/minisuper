@@ -16,6 +16,9 @@ public class Cliente implements Serializable {
 
     @Column(nullable = false, length = 100)
     private String nombre;
+    
+    @Column(nullable = false, length = 20)
+    private String cedula;
 
     @Column(nullable = false, length = 100)
     private String apellido1;
