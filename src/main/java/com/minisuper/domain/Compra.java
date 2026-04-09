@@ -1,42 +1,27 @@
 package com.minisuper.domain;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "compra")
-@ToString(exclude = {"proveedor", "usuario", "detalles"})
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Compra implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_compra")
-    @EqualsAndHashCode.Include
     private Integer idCompra;
 
+    @Column(name = "fecha_compra", nullable = false)
     @Temporal(TemporalType.DATE)
-    @Column(nullable = false)
-    private Date fecha;
-
-    @NotNull(message = "El total no puede ser nulo")
-    @DecimalMin(value = "0.01", inclusive = true, message = "El total debe ser mayor a cero")
-    @Column(nullable = false, precision = 12, scale = 2)
-    private BigDecimal total;
+    private Date fechaCompra;
 
     @ManyToOne
     @JoinColumn(name = "id_proveedor", nullable = false)
@@ -46,13 +31,11 @@ public class Compra implements Serializable {
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
-    @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DetalleCompra> detalles = new ArrayList<>();
+    @Column(precision = 10, scale = 2)
+    @NotNull(message = "El total no puede ser nulo")
+    @DecimalMin(value = "0.00", inclusive = true, message = "El total debe ser mayor o igual a cero")
+    private BigDecimal total;
 
-    @PrePersist
-    public void prePersist() {
-        if (fecha == null) {
-            fecha = new Date();
-        }
-    }
+    @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL)
+    private List<DetalleCompra> detalles;
 }

@@ -1,5 +1,6 @@
 package com.minisuper.service;
 
+import com.minisuper.repository.*;
 import com.minisuper.domain.Proveedor;
 import com.minisuper.repository.ProveedorRepository;
 import java.util.List;
