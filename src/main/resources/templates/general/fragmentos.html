@@ -3,155 +3,164 @@
     <body>
 
         <!-- Fragmento #1: Head -->
-        <head th:fragment="head">
-            <meta charset="UTF-8"/>
-            <meta name="viewport" content="width=device-width, initial-scale=1"/>
-            <title>Minisúper</title>
+    <head th:fragment="head">
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title>Minisúper</title>
 
-            <link rel="icon" type="image/png" sizes="16x16" th:href="@{/fav/favicon-16x16.png}"/>
-            <link rel="icon" type="image/png" sizes="32x32" th:href="@{/fav/favicon-32x32.png}"/>
-            <link rel="icon" type="image/png" sizes="96x96" th:href="@{/fav/favicon-96x96.png}"/>
-            <link rel="icon" type="image/png" sizes="256x256" th:href="@{/fav/favicon-256x256.png}"/>
+        <link rel="icon" type="image/png" sizes="16x16" th:href="@{/fav/favicon-16x16.png}"/>
+        <link rel="icon" type="image/png" sizes="32x32" th:href="@{/fav/favicon-32x32.png}"/>
+        <link rel="icon" type="image/png" sizes="96x96" th:href="@{/fav/favicon-96x96.png}"/>
+        <link rel="icon" type="image/png" sizes="256x256" th:href="@{/fav/favicon-256x256.png}"/>
 
-            <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
-            <link th:href="@{/webjars/font-awesome/css/all.min.css}" rel="stylesheet"/>
+        <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+        <link th:href="@{/webjars/font-awesome/css/all.min.css}" rel="stylesheet"/>
 
-            <link th:href="@{/css/estilos.css}" rel="stylesheet"/>
+        <link th:href="@{/css/estilos.css}" rel="stylesheet"/>
 
-            <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
-            <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
-            <script th:src="@{/js/rutinas.js}"></script>
-        </head>
+        <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+        <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+        <script th:src="@{/js/rutinas.js}"></script>
+    </head>
 
-        <!-- Fragmento #2: Header -->
-        <header th:fragment="header" class="header">
-            <nav class="navbar navbar-expand-sm navbar-dark bg-success p-0">
-                <div class="container">
-                    <a th:href="@{/}" class="navbar-brand">
-                        <i class="fas fa-store"></i> [[#{aplicacion.titulo}]]
-                    </a>
+    <!-- Fragmento #2: Header -->
+    <header th:fragment="header" class="header">
+        <nav class="navbar navbar-expand-sm navbar-dark bg-success p-0">
+            <div class="container">
+                <a th:href="@{/}" class="navbar-brand">
+                    <i class="fas fa-store"></i> [[#{aplicacion.titulo}]]
+                </a>
 
-                    <button class="navbar-toggler" type="button"
-                            data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-                            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+                <button class="navbar-toggler" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                        <ul class="navbar-nav">
-                            <li class="nav-item px-2">
-                                <a class="nav-link" th:href="@{/categoria/listado}">
-                                    <i class="fas fa-tags"></i> [[#{plantilla.categorias}]]
-                                </a>
-                            </li>
-                            <li class="nav-item px-2">
-                                <a class="nav-link" th:href="@{/producto/listado}">
-                                    <i class="fas fa-box"></i> [[#{plantilla.productos}]]
-                                </a>
-                            </li>
-                            <li class="nav-item px-2">
-                                <a class="nav-link" th:href="@{/cliente/listado}">
-                                    <i class="fas fa-users"></i> [[#{plantilla.clientes}]]
-                                </a>
-                            </li>
-                            <li class="nav-item px-2">
-                                <a class="nav-link" th:href="@{/proveedor/listado}">
-                                    <i class="fas fa-truck"></i> [[#{plantilla.proveedores}]]
-                                </a>
-                            </li>
-                        </ul>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                    <ul class="navbar-nav">
+                        <li class="nav-item px-2">
+                            <a class="nav-link" th:href="@{/categoria/listado}">
+                                <i class="fas fa-tags"></i> [[#{plantilla.categorias}]]
+                            </a>
+                        </li>
+                        <li class="nav-item px-2">
+                            <a class="nav-link" th:href="@{/producto/listado}">
+                                <i class="fas fa-box"></i> [[#{plantilla.productos}]]
+                            </a>
+                        </li>
+                        <li class="nav-item px-2">
+                            <a class="nav-link" th:href="@{/cliente/listado}">
+                                <i class="fas fa-users"></i> [[#{plantilla.clientes}]]
+                            </a>
+                        </li>
+                        <li class="nav-item px-2">
+                            <a class="nav-link" th:href="@{/proveedor/listado}">
+                                <i class="fas fa-truck"></i> [[#{plantilla.proveedores}]]
+                            </a>
+                        </li>
 
-                        <ul class="navbar-nav">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">
-                                    <i class="fas fa-globe"></i> [[#{plantilla.idioma}]]
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" th:href="@{/(lang=es)}">Español</a></li>
-                                    <li><a class="dropdown-item" th:href="@{/(lang=en)}">English</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
+                        <li class="nav-item px-2">
+                            <a class="nav-link" th:href="@{/inventario/listado}">
+                                <i class="fa-solid fa-boxes-stacked"></i> [[#{plantilla.inventario}]]
+                            </a>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">
+                                <i class="fas fa-globe"></i> [[#{plantilla.idioma}]]
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" th:href="@{/(lang=es)}">Español</a></li>
+                                <li><a class="dropdown-item" th:href="@{/(lang=en)}">English</a></li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
-            </nav>
+            </div>
+        </nav>
 
-            <section class="py-2 bg-dark text-white">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h1 class="mb-0">
-                                <i class="fas fa-cash-register"></i> [[#{plantilla.suTienda}]]
-                            </h1>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </header>
-
-        <!-- Fragmento #3: Footer -->
-        <footer th:fragment="footer" class="p-2 mt-5 bg-success text-white">
-            <p class="lead text-center mb-0">[[#{plantilla.derechos}]] &copy;</p>
-        </footer>
-
-        <!-- Fragmento #4: Toast para mensajes -->
-        <section th:fragment="mostrarToast">
-            <div aria-live="polite" aria-atomic="true"
-                 class="position-fixed top-50 start-50 translate-middle"
-                 style="z-index: 1080; min-width: 320px;">
-
-                <div th:if="${error}" class="toast show" role="alert"
-                     aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="3500">
-                    <div class="toast-header text-white bg-danger">
-                        <i class="fa-solid fa-circle-exclamation me-2"></i>
-                        <strong class="me-auto">Error</strong>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
-                    </div>
-                    <div class="toast-body">
-                        <p class="mb-2">[[${error}]]</p>
-                    </div>
-                </div>
-
-                <div th:if="${todoOk}" class="toast show" role="status"
-                     aria-live="polite" aria-atomic="true" data-bs-autohide="true" data-bs-delay="3500">
-                    <div class="toast-header text-white bg-success">
-                        <i class="fa-solid fa-circle-check me-2"></i>
-                        <strong class="me-auto">Éxito</strong>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
-                    </div>
-                    <div class="toast-body">
-                        <p class="mb-2">[[${todoOk}]]</p>
+        <section class="py-2 bg-dark text-white">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1 class="mb-0">
+                            <i class="fas fa-cash-register"></i> [[#{plantilla.suTienda}]]
+                        </h1>
                     </div>
                 </div>
             </div>
-
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    const confirmModal = document.getElementById('confirmModal');
-                    if (confirmModal) {
-                        confirmModal.addEventListener('show.bs.modal', function (event) {
-                            const button = event.relatedTarget;
-                            if (!button) return;
-
-                            const id = button.getAttribute('data-bs-id');
-                            const descripcion = button.getAttribute('data-bs-descripcion');
-
-                            const modalId = confirmModal.querySelector('#modalId');
-                            const modalDescripcion = confirmModal.querySelector('#modalDescripcion');
-
-                            if (modalId) modalId.value = id || '';
-                            if (modalDescripcion) modalDescripcion.textContent = descripcion || '';
-                        });
-                    }
-
-                    const toastElList = [].slice.call(document.querySelectorAll('.toast'));
-                    toastElList.forEach(function (toastEl) {
-                        const toast = new bootstrap.Toast(toastEl);
-                        toast.show();
-                    });
-                });
-            </script>
         </section>
+    </header>
 
-    </body>
+    <!-- Fragmento #3: Footer -->
+    <footer th:fragment="footer" class="p-2 mt-5 bg-success text-white">
+        <p class="lead text-center mb-0">[[#{plantilla.derechos}]] &copy;</p>
+    </footer>
+
+    <!-- Fragmento #4: Toast para mensajes -->
+    <section th:fragment="mostrarToast">
+        <div aria-live="polite" aria-atomic="true"
+             class="position-fixed top-50 start-50 translate-middle"
+             style="z-index: 1080; min-width: 320px;">
+
+            <div th:if="${error}" class="toast show" role="alert"
+                 aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="3500">
+                <div class="toast-header text-white bg-danger">
+                    <i class="fa-solid fa-circle-exclamation me-2"></i>
+                    <strong class="me-auto">Error</strong>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body">
+                    <p class="mb-2">[[${error}]]</p>
+                </div>
+            </div>
+
+            <div th:if="${todoOk}" class="toast show" role="status"
+                 aria-live="polite" aria-atomic="true" data-bs-autohide="true" data-bs-delay="3500">
+                <div class="toast-header text-white bg-success">
+                    <i class="fa-solid fa-circle-check me-2"></i>
+                    <strong class="me-auto">Éxito</strong>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body">
+                    <p class="mb-2">[[${todoOk}]]</p>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const confirmModal = document.getElementById('confirmModal');
+                if (confirmModal) {
+                    confirmModal.addEventListener('show.bs.modal', function (event) {
+                        const button = event.relatedTarget;
+                        if (!button)
+                            return;
+
+                        const id = button.getAttribute('data-bs-id');
+                        const descripcion = button.getAttribute('data-bs-descripcion');
+
+                        const modalId = confirmModal.querySelector('#modalId');
+                        const modalDescripcion = confirmModal.querySelector('#modalDescripcion');
+
+                        if (modalId)
+                            modalId.value = id || '';
+                        if (modalDescripcion)
+                            modalDescripcion.textContent = descripcion || '';
+                    });
+                }
+
+                const toastElList = [].slice.call(document.querySelectorAll('.toast'));
+                toastElList.forEach(function (toastEl) {
+                    const toast = new bootstrap.Toast(toastEl);
+                    toast.show();
+                });
+            });
+        </script>
+    </section>
+
+</body>
 </html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"/>
+    <body>
+
+        <!-- Fragmento 1: Botón agregar + Modal -->
+        <section th:fragment="agregar">
+            <div class="container py-4">
+                <div class="row align-items-center g-3">
+                    <div class="col-md-6">
+                        <h2 class="mb-1 text-info">
+                            <i class="fa-solid fa-warehouse"></i> [[#{inventario.listado}]]
+                        </h2>
+                        <p class="text-muted mb-0">Controla las existencias de productos del minisúper.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <button type="button" class="btn btn-info text-white shadow-sm"
+                                data-bs-toggle="modal" data-bs-target="#agregarInventarioModal">
+                            <i class="fa-solid fa-plus"></i> [[#{accion.agregar}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="agregarInventarioModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content shadow">
+                        <form th:action="@{/inventario/guardar}" th:object="${inventario}" method="post">
+                            <div class="modal-header bg-info text-white">
+                                <h5 class="modal-title">
+                                    <i class="fa-solid fa-warehouse"></i> [[#{accion.agregar}]] [[#{plantilla.inventario}]]
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">[[#{inventario.producto}]]</label>
+                                    <select name="producto.idProducto" class="form-select" required>
+                                        <option value="">Seleccione un producto</option>
+                                        <option th:each="p : ${productos}"
+                                                th:value="${p.idProducto}"
+                                                th:text="${p.nombre}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">[[#{inventario.cantidadDisponible}]]</label>
+                                    <input type="number" name="cantidadDisponible" class="form-control" required
+                                           min="0" placeholder="Digite la cantidad disponible"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">[[#{inventario.stockMinimo}]]</label>
+                                    <input type="number" name="stockMinimo" class="form-control" required
+                                           min="0" placeholder="Digite el stock mínimo"/>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="fa-solid fa-xmark"></i> [[#{accion.cerrar}]]
+                                </button>
+                                <button type="submit" class="btn btn-info text-white">
+                                    <i class="fa-solid fa-floppy-disk"></i> [[#{accion.guardar}]]
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fragmento 2: Listado de inventario -->
+        <section th:fragment="listado" class="pb-4">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-lg-9">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-dark text-white">
+                                <h4 class="mb-0">
+                                    <i class="fa-solid fa-list"></i> [[#{inventario.listado}]]
+                                </h4>
+                            </div>
+                            <div class="card-body">
+                                <div th:if="${inventarios != null and !inventarios.empty}" class="table-responsive">
+                                    <table class="table table-striped table-hover align-middle">
+                                        <thead class="table-info">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>[[#{inventario.producto}]]</th>
+                                                <th>[[#{inventario.cantidadDisponible}]]</th>
+                                                <th>[[#{inventario.stockMinimo}]]</th>
+                                                <th>[[#{inventario.fechaActualizacion}]]</th>
+                                                <th class="text-center">Estado</th>
+                                                <th class="text-center">[[#{accion.acciones}]]</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="i : ${inventarios}">
+                                                <td th:text="${i.idInventario}"></td>
+                                                <td class="fw-semibold" th:text="${i.producto.nombre}"></td>
+                                                <td th:text="${i.cantidadDisponible}"></td>
+                                                <td th:text="${i.stockMinimo}"></td>
+                                                <td th:text="${i.fechaActualizacion}"></td>
+                                                <td class="text-center">
+                                                    <span th:if="${i.cantidadDisponible >= i.stockMinimo}"
+                                                          class="badge bg-success">OK</span>
+                                                    <span th:if="${i.cantidadDisponible < i.stockMinimo}"
+                                                          class="badge bg-danger">Stock bajo</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a th:href="@{/inventario/modificar/{id}(id=${i.idInventario})}"
+                                                       class="btn btn-sm btn-warning me-1">
+                                                        <i class="fas fa-pencil-alt"></i> [[#{accion.modificar}]]
+                                                    </a>
+                                                    <button type="button" class="btn btn-sm btn-danger"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#confirmModal"
+                                                            th:data-bs-id="${i.idInventario}"
+                                                            th:data-bs-descripcion="${i.producto.nombre}">
+                                                        <i class="fa-solid fa-trash"></i> [[#{accion.eliminar}]]
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="text-center py-4" th:if="${inventarios == null or inventarios.empty}">
+                                    <i class="fa-solid fa-circle-info fa-2x text-secondary mb-2"></i>
+                                    <p class="mb-0 text-muted">[[#{inventario.sinRegistros}]]</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card text-center bg-info text-white border-0 shadow-sm">
+                            <div class="card-body py-4">
+                                <h4>[[#{inventario.total}]]</h4>
+                                <h2 class="display-6 fw-bold mb-0">
+                                    <i class="fas fa-warehouse"></i> <span th:text="${totalInventarios}"></span>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fragmento 3: Formulario de edición -->
+        <section th:fragment="editar">
+            <div class="container py-4">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <form method="post" th:action="@{/inventario/guardar}"
+                              th:object="${inventario}" class="needs-validation" novalidate>
+                            <input type="hidden" th:field="*{idInventario}"/>
+
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6 d-grid">
+                                    <a th:href="@{/inventario/listado}" class="btn btn-primary">
+                                        <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                                    </a>
+                                </div>
+                                <div class="col-md-6 d-grid">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-check"></i> [[#{accion.guardar}]]
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-warning">
+                                    <h4 class="mb-0">
+                                        <i class="fas fa-edit"></i> [[#{accion.modificar}]] [[#{plantilla.inventario}]]
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">[[#{inventario.producto}]]</label>
+                                        <select class="form-select" name="producto.idProducto" required>
+                                            <option value="">Seleccione un producto</option>
+                                            <option th:each="p : ${productos}"
+                                                    th:value="${p.idProducto}"
+                                                    th:text="${p.nombre}"
+                                                    th:selected="${inventario.producto != null and inventario.producto.idProducto == p.idProducto}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">[[#{inventario.cantidadDisponible}]]</label>
+                                        <input type="number" class="form-control" th:field="*{cantidadDisponible}"
+                                               required min="0" placeholder="Digite la cantidad disponible"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">[[#{inventario.stockMinimo}]]</label>
+                                        <input type="number" class="form-control" th:field="*{stockMinimo}"
+                                               required min="0" placeholder="Digite el stock mínimo"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fragmento 4: Modal confirmar eliminación -->
+        <section th:fragment="confirmarEliminar">
+            <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content shadow">
+                        <form th:action="@{/inventario/eliminar}" method="post">
+                            <input type="hidden" name="idInventario" id="modalId"/>
+                            <div class="modal-header bg-danger text-white">
+                                <h5 class="modal-title">
+                                    <i class="fa-solid fa-circle-exclamation"></i> [[#{accion.confirmar}]]
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="mb-0">
+                                    ¿Está seguro de eliminar este registro de inventario:
+                                    <strong id="modalDescripcion"></strong>?
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="fa-solid fa-xmark"></i> [[#{accion.cerrar}]]
+                                </button>
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fa-solid fa-trash"></i> [[#{accion.eliminar}]]
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </body>
+</html>
