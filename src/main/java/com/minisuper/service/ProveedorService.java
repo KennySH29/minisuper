@@ -47,7 +47,7 @@ public class ProveedorService {
     }
 
     @Transactional(readOnly = true)
-    public List<Proveedor> buscarPorNombre(String nombre) {
-        return proveedorRepository.findByNombreContainingIgnoreCase(nombre);
+    public List<Proveedor> buscarPorNombre(String nombreEmpresa) {
+        return proveedorRepository.findByNombreEmpresaContainingIgnoreCase(nombreEmpresa);
     }
 }

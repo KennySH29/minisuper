@@ -1,8 +1,6 @@
 package com.minisuper.controller;
 
-import com.minisuper.domain.Producto;
-import com.minisuper.service.CategoriaService;
-import com.minisuper.service.ProductoService;
+import com.minisuper.domain.Proveedor;
 import com.minisuper.service.ProveedorService;
 import jakarta.validation.Valid;
 import java.util.Locale;
@@ -17,85 +15,72 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/producto")
+@RequestMapping("/proveedor")
 public class ProveedorController {
 
-    private final ProductoService productoService;
-    private final CategoriaService categoriaService;
     private final ProveedorService proveedorService;
     private final MessageSource messageSource;
 
-    public ProveedorController(ProductoService productoService,
-                              CategoriaService categoriaService,
-                              ProveedorService proveedorService,
-                              MessageSource messageSource) {
-        this.productoService = productoService;
-        this.categoriaService = categoriaService;
+    public ProveedorController(ProveedorService proveedorService, MessageSource messageSource) {
         this.proveedorService = proveedorService;
         this.messageSource = messageSource;
     }
 
     @GetMapping("/listado")
     public String listado(Model model) {
-        var productos = productoService.getProductos();
-        model.addAttribute("productos", productos);
-        model.addAttribute("totalProductos", productos.size());
-        model.addAttribute("categorias", categoriaService.getCategorias());
-        model.addAttribute("proveedores", proveedorService.getProveedores());
-        model.addAttribute("producto", new Producto());
-        return "producto/listado";
+        var proveedor = proveedorService.getProveedores();
+        model.addAttribute("proveedores", proveedor);
+        model.addAttribute("totalProveedores", proveedor.size());
+        return "proveedor/listado";
     }
 
     @PostMapping("/guardar")
-    public String guardar(@Valid Producto producto, RedirectAttributes redirectAttributes) {
+    public String guardar(@Valid Proveedor proveedor, RedirectAttributes redirectAttributes) {
         try {
-            productoService.save(producto);
+            proveedorService.save(proveedor);
             redirectAttributes.addFlashAttribute("todoOk",
                     messageSource.getMessage("mensaje.actualizado", null, Locale.getDefault()));
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error al guardar el producto.");
+            redirectAttributes.addFlashAttribute("error", "Error al guardar el provedor.");
         }
-        return "redirect:/producto/listado";
+        return "redirect:/proveedor/listado";
     }
 
     @PostMapping("/eliminar")
-    public String eliminar(Integer idProducto, RedirectAttributes redirectAttributes) {
+    public String eliminar(Integer idProveedor, RedirectAttributes redirectAttributes) {
         String titulo = "todoOk";
         String detalle = "mensaje.eliminado";
 
         try {
-            productoService.delete(idProducto);
+            proveedorService.delete(idProveedor);
         } catch (IllegalArgumentException e) {
             titulo = "error";
-            detalle = "El producto no existe";
+            detalle = "El proveedor no existe";
         } catch (IllegalStateException e) {
             titulo = "error";
-            detalle = "No se puede eliminar el producto, tiene datos asociados";
+            detalle = "No se puede eliminar el proveedor, tiene datos asociados";
         } catch (Exception e) {
             titulo = "error";
-            detalle = "Error inesperado al eliminar el producto";
+            detalle = "Error inesperado al eliminar el proveedor";
         }
 
         redirectAttributes.addFlashAttribute(titulo, detalle);
-        return "redirect:/producto/listado";
+        return "redirect:/proveedor/listado";
     }
 
-    @GetMapping("/modificar/{idProducto}")
-    public String modificar(@PathVariable("idProducto") Integer idProducto,
-                            Model model,
-                            RedirectAttributes redirectAttributes) {
-        Optional<Producto> productoOpt = productoService.getProducto(idProducto);
+    @GetMapping("/modificar/{idProveedor}")
+    public String modificar(@PathVariable("idProveedor") Integer idProveedor,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        Optional<Proveedor> proveedorOpt = proveedorService.getProveedor(idProveedor);
 
-        if (productoOpt.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "El producto no existe");
-            return "redirect:/producto/listado";
+        if (proveedorOpt.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "El proveedor no existe");
+            return "redirect:/proveedor/listado";
         }
-
-        model.addAttribute("producto", productoOpt.get());
-        model.addAttribute("categorias", categoriaService.getCategorias());
-        model.addAttribute("proveedores", proveedorService.getProveedores());
-        return "producto/modifica";
+        model.addAttribute("proveedor", proveedorOpt.get());
+        return "proveedor/modifica";
     }
 }

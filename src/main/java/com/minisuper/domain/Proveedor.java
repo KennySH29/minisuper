@@ -14,11 +14,8 @@ public class Proveedor implements Serializable {
     @Column(name = "id_proveedor")
     private Integer idProveedor;
 
-    @Column(name = "NOMBRE_EMPRESA", nullable = false, length = 100)
-    private String nombre;
-
-    @Column(length = 100)
-    private String contacto;
+    @Column(name = "nombre_empresa", nullable = false, length = 100)
+    private String nombreEmpresa;
 
     @Column(length = 20)
     private String telefono;

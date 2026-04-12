@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProveedorRepository extends JpaRepository<Proveedor, Integer> {
-    List<Proveedor> findByNombreContainingIgnoreCase(String nombre);
+    public List<Proveedor> findByNombreEmpresaContainingIgnoreCase(String nombreEmpresa);
 }
