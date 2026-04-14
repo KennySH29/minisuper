@@ -1,4 +1,5 @@
 package com.minisuper.domain;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
@@ -35,11 +36,11 @@ public class Venta implements Serializable {
     @JoinColumn(name = "id_metodo", nullable = false)
     private MetodoPago metodoPago;
 
-    @Column(precision = 10, scale = 2)
+    @Column(name = "total", precision = 10, scale = 2, nullable = false)
     @NotNull(message = "El total no puede ser nulo")
     @DecimalMin(value = "0.00", inclusive = true, message = "El total debe ser mayor o igual a cero")
     private BigDecimal total;
 
-    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetalleVenta> detalles;
 }

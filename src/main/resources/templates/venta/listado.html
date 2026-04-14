@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{general/fragmentos :: head}">
+    <title>Punto de Venta</title>
+</head>
+<body>
+
+<header th:replace="~{general/fragmentos :: header}"></header>
+
+<section class="bg-dark text-white py-3 mb-4">
+    <div class="container">
+        <h1><i class="fas fa-cash-register"></i> Punto de Venta</h1>
+    </div>
+</section>
+
+<section class="container mb-4">
+    <div th:if="${todoOk}" class="alert alert-success" th:text="${todoOk}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            Registrar nueva venta
+        </div>
+        <div class="card-body">
+            <form th:action="@{/venta/guardar}" method="post">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Cliente</label>
+                        <select name="idCliente" class="form-select">
+                            <option value="">Seleccione un cliente</option>
+                            <option th:each="c : ${clientes}"
+                                    th:value="${c.idCliente}"
+                                    th:text="${c.nombre + ' ' + c.apellido1}"></option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Usuario</label>
+                        <select name="idUsuario" class="form-select" required>
+                            <option value="">Seleccione un usuario</option>
+                            <option th:each="u : ${usuarios}"
+                                    th:value="${u.idUsuario}"
+                                    th:text="${u.nombre + ' ' + u.apellido1}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Método de pago</label>
+                        <select name="idMetodoPago" class="form-select" required>
+                            <option value="">Seleccione un método</option>
+                            <option th:each="m : ${metodosPago}"
+                                    th:value="${m.idMetodo}"
+                                    th:text="${m.descripcion}"></option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Producto</label>
+                        <select name="idProducto" class="form-select" required>
+                            <option value="">Seleccione un producto</option>
+                            <option th:each="p : ${productos}"
+                                    th:value="${p.idProducto}"
+                                    th:text="${p.nombre + ' - ₡' + p.precio}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Cantidad</label>
+                        <input type="number" name="cantidad" min="1" class="form-control" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i> Registrar venta
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<section class="container mb-5">
+    <div class="card">
+        <div class="card-header bg-dark text-white">
+            Historial de ventas
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <thead class="table-success">
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Usuario</th>
+                        <th>Método de pago</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="v : ${ventas}">
+                        <td th:text="${v.idVenta}"></td>
+                        <td th:text="${v.fechaVenta}"></td>
+                        <td th:text="${v.cliente != null ? v.cliente.nombre + ' ' + v.cliente.apellido1 : 'Sin cliente'}"></td>
+                        <td th:text="${v.usuario.nombre + ' ' + v.usuario.apellido1}"></td>
+                        <td th:text="${v.metodoPago.descripcion}"></td>
+                        <td th:text="${v.total}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<footer th:replace="~{general/fragmentos :: footer}"></footer>
+
+</body>
+</html>
