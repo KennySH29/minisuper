@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Integer> {
-
-    List<Producto> findByNombreContainingIgnoreCase(String nombre);
+     //Se define una consulta derivada
+    List<Producto> findByNombreContainingIgnoreCase(String nombre); //llama a todos lo registros de la tabla productos
 }
